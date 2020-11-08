@@ -83,11 +83,11 @@ public strictfp class glProcess {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_R16, thisMask.size, thisMask.size, 0, GL_RED, GL_FLOAT, pixels);
             glBindTexture(GL_TEXTURE_2D, 0);
-//            System.out.println(
-//                    "glMask " + thisMask.name +
-//                    " uploaded to tex ID " +
-//                            destination.ID
-//            );
+            System.out.println(
+                    "glMask " + thisMask.name +
+                    " uploaded to tex ID " +
+                    destination.ID
+            );
         }
     }
     private strictfp class BlurTask extends Task  {
@@ -101,10 +101,10 @@ public strictfp class glProcess {
         @Override
         public void run() {
             prepareDestination(destination, thisMask.size);
-//            System.out.println(
-//                "blurring glMask " + thisMask.name +
-//                ", radius " + radius
-//            );
+            System.out.println(
+                "blurring glMask " + thisMask.name +
+                ", radius " + radius
+            );
 
             glAttachShader(program, blurShader);
             glLinkProgram(program);
@@ -146,10 +146,10 @@ public strictfp class glProcess {
         @Override
         public void run() {
 
-//            System.out.println(
-//                "glMask " + thisMask.name +
-//                " running DistanceField first pass"
-//            );
+            System.out.println(
+                "glMask " + thisMask.name +
+                " running DistanceField first pass"
+            );
 
             glAttachShader(program, distanceFieldFirstPassShader);
             glLinkProgram(program);
@@ -176,11 +176,11 @@ public strictfp class glProcess {
                  pow2--
             ) {
                 float offset = (float) StrictMath.pow(2, pow2) / thisMask.size;
-//                System.out.println(
-//                    "glMask " + thisMask.name +
-//                    " running DistanceField pass " + (pow2) +
-//                    " with offset " + offset
-//                );
+                System.out.println(
+                    "glMask " + thisMask.name +
+                    " running DistanceField pass " + (pow2) +
+                    " with offset " + offset
+                );
 
                 glBindTexture(GL_TEXTURE_2D, 0);
                 glDeleteTextures(sources[0].ID);
@@ -196,10 +196,10 @@ public strictfp class glProcess {
             }
             glDetachShader(program, distanceFieldPassNShader);
 
-//            System.out.println(
-//                "glMask " + thisMask.name +
-//                " running DistanceField last pass"
-//            );
+            System.out.println(
+                "glMask " + thisMask.name +
+                " running DistanceField last pass"
+            );
 
             glAttachShader(program, distanceFieldLastPassShader);
             glLinkProgram(program);
@@ -234,11 +234,11 @@ public strictfp class glProcess {
         }
         @Override
         public void run() {
-//            System.out.println(
-//                "glMask " + thisMask.name +
-//                " running blend pass with texture IDs " +
-//                sources[0].ID + " " + sources[1].ID + " " + sources[2].ID
-//            );
+            System.out.println(
+                "glMask " + thisMask.name +
+                " running blend pass with texture IDs " +
+                sources[0].ID + " " + sources[1].ID + " " + sources[2].ID
+            );
             glAttachShader(program, blendShader);
             glLinkProgram(program);
             glUseProgram(program);
@@ -282,15 +282,15 @@ public strictfp class glProcess {
         public void run() {
             reader.sources[sourceSlot].ID = sources[0].ID;
             this.destination = this.sources[0];
-//            System.out.println(
-//                "glMask " + thisMask.name +
-//                " is ready to be read by task " +
-//                reader +
-//                " on glMask " +
-//                reader.thisMask.name + "" +
-//                " slot " + sourceSlot +
-//                " texture ID " + sources[0].ID
-//            );
+            System.out.println(
+                "glMask " + thisMask.name +
+                " is ready to be read by task " +
+                reader +
+                " on glMask " +
+                reader.thisMask.name + "" +
+                " slot " + sourceSlot +
+                " texture ID " + sources[0].ID
+            );
         }
 
         @Override
@@ -338,25 +338,25 @@ public strictfp class glProcess {
             this.gl = gl;
             gl.masks.add(this);
             tasks.add(new UploadTask(gl, this, floatMask.mask));
-//            System.out.println("made glMask " + name);
-//            System.out.println(
-//                    "added Upload task to glMask " + name +
-//                    " with source " + floatMask.name
-//            );
+            System.out.println("made glMask " + name);
+            System.out.println(
+                    "added Upload task to glMask " + name +
+                    " with source " + floatMask.name
+            );
         }
         public glMask blur(Float radius) {
             tasks.add( new BlurTask(gl, this, 2*radius) );
-//            System.out.println("added blur task to glMask " + name);
+            System.out.println("added blur task to glMask " + name);
             return this;
         }
         public glMask blend(glMask otherMask, glMask alphaMask, boolean invertBlendMask) {
             BlendTask blendTask = new BlendTask(gl, this, otherMask, alphaMask, invertBlendMask);
             tasks.add(blendTask);
-//            System.out.println("added blend task to mask " + name);
+            System.out.println("added blend task to mask " + name);
             otherMask.tasks.add(new ReadTask(gl, otherMask, blendTask, 1));
-//            System.out.println("added Read task to glMask " + otherMask.name);
+            System.out.println("added Read task to glMask " + otherMask.name);
             alphaMask.tasks.add(new ReadTask(gl, alphaMask, blendTask, 2));
-//            System.out.println("added Read task to glMask " + alphaMask.name);
+            System.out.println("added Read task to glMask " + alphaMask.name);
             return this;
         }
         public glMask toDistanceField() {
@@ -369,7 +369,7 @@ public strictfp class glProcess {
         }
         public glMask save() {
             tasks.add(new SaveTask(gl, this));
-//            System.out.println("added save task to mask " + name);
+            System.out.println("added save task to mask " + name);
             return this;
         }
 
@@ -409,7 +409,7 @@ public strictfp class glProcess {
         window = glfwCreateWindow(previewSize, previewSize, "glMapGenerator", NULL, NULL); // Create the window
         if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(-1);
+        glfwSwapInterval(120);
         GLCapabilities caps = GL.createCapabilities();
         if (!caps.GL_EXT_framebuffer_object)
             throw new AssertionError("This demo requires the EXT_framebuffer_object extension");
@@ -434,7 +434,7 @@ public strictfp class glProcess {
     //      since AWS and glfw don't play nice together, this is a very rough Visualiser equivalent
     //      needs some way to draw text.
     private void present(Task task) {
-//        System.out.println("presenting task" + task + " texture ID " + task.destination.ID);
+        System.out.println("presenting task" + task + " texture ID " + task.destination.ID);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glAttachShader(program, blitShader);
         glLinkProgram(program);
@@ -448,7 +448,7 @@ public strictfp class glProcess {
     }
     private void prepareDestination(Texture destination, int size) {
         destination.ID = glGenTextures();
-//        System.out.println("prepared texture ID " + destination.ID);
+        System.out.println("prepared texture ID " + destination.ID);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, destination.ID);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -465,20 +465,19 @@ public strictfp class glProcess {
         while(masks.size() > 0){ //while there are masks
             masks:
             for (Iterator<glMask> iMask = masks.iterator(); iMask.hasNext();) {
-
                 glMask mask = iMask.next();
-//                System.out.println("processing mask " + mask.name);
+                System.out.println("processing mask " + mask.name);
 
                 for (Iterator<Task> iTask = mask.tasks.iterator(); iTask.hasNext();) {
                     Task task = iTask.next();
-//                    System.out.println("processing task " + task);
+                    System.out.println("processing task " + task);
                     boolean sourcesReady = true;
 
                     if(task.getClass() != UploadTask.class) {
                         sources:
                         for (Texture tex : task.sources) {
                             if (tex.ID == 0) {
-//                                System.out.println("sources not ready");
+                                System.out.println("sources not ready");
                                 sourcesReady = false;
                                 break sources;
                             }
@@ -486,24 +485,22 @@ public strictfp class glProcess {
                     }
                     if (!sourcesReady) continue masks;
                     else {
-//                        System.out.println("running task " + task);
+                        System.out.println("running task " + task);
                         task.run();
-//                        if (task.getClass() == BlendTask.class) {
                             present(task);
-//                            Thread.sleep(100);
-//                        }
-//                        System.out.println("retiring task " + task);
+                        }
+                        System.out.println("retiring task " + task);
                         task.retire();
                         iTask.remove();
                     }
-                }
+
                 if (mask.tasks.size() == 0) {
                     iMask.remove();
-//                    System.out.println("mask complete " + mask.name + ", remaining masks: " + masks.size());
+                    System.out.println("mask complete " + mask.name + ", remaining masks: " + masks.size());
                 }
             }
         }
-//        System.out.println("done");
+        System.out.println("done");
 //        if (debugProc != null)
 //            debugProc.free();
 //        errCallback.free();
