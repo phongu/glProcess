@@ -1,6 +1,6 @@
-#version 400 core
+#version 420 core
 
-uniform sampler2D tex;
+layout(binding=0) uniform sampler2D tex;
 uniform float maxDistance;
 in vec2 texcoord;
 out float result;

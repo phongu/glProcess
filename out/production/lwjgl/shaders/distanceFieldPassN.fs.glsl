@@ -1,6 +1,6 @@
-#version 400 core
+#version 420 core
 
-uniform sampler2D tex;
+layout(binding=0) uniform sampler2D tex;
 uniform float offset;
 in vec2 texcoord;
 out vec4 color;

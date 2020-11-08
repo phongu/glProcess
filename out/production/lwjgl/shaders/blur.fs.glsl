@@ -1,8 +1,8 @@
-#version 400 core
+#version 420 core
 
 in vec2 texcoord;
 
-uniform sampler2D tex;
+layout(binding=0) uniform sampler2D tex;
 uniform float     textureSize;
 uniform float     radius;
 uniform vec2      direction;
